@@ -1,7 +1,7 @@
-import Heading from "@/app/components/heading"
-import MaxWidthWrapper from "@/app/components/max-width-wrapper"
+import Heading from "@/components/heading"
+import MaxWidthWrapper from "@/components/max-width-wrapper"
 import { Check } from "lucide-react"
-import ShinyButton from "@/app/components/shiny-button"
+import ShinyButton from "@/components/shiny-button"
 
 export default function Page() {
   return (
@@ -49,8 +49,11 @@ export default function Page() {
           </div>
         </MaxWidthWrapper>
       </section>
+
       <section></section>
+
       <section></section>
+
       <section></section>
     </>
   )
