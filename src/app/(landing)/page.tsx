@@ -322,7 +322,7 @@ export default function Page() {
 
             {/* second customer review */}
 
-            <div className="flex flex-auto flex-col gap-4 p-6 bg-brand-25 sm:p-8 lg:p-16 rounded-b-[2rem] lg:rounded-tl-none lg:rounded-r-[2rem]">
+            <div className="flex flex-auto flex-col gap-4 p-6 bg-brand-25 sm:p-8 lg:p-16 rounded-b-[2rem] lg:rounded-tl-none lg:rounded-bl-none lg:rounded-r-[2rem]">
               <div className="flex gap-0.5 mb-2 justify-center lg:justify-start">
                 <Star className="size-5 text-brand-600 fill-brand-600" />
                 <Star className="size-5 text-brand-600 fill-brand-600" />
