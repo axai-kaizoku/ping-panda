@@ -1,11 +1,11 @@
 import { db } from "@/db"
 import { currentUser } from "@clerk/nextjs/server"
 import { redirect } from "next/navigation"
-import DashboardMain from "./_components/dashboard-main"
 import DashboardContent from "./_components/dashboard-content"
 import CreateEventCategoryModal from "./_components/create-event-category-modal"
 import { Button } from "@/components/ui/button"
 import { PlusIcon } from "lucide-react"
+import DashboardLayout from "./_components/dashboard-layout"
 
 export default async function Page() {
   const auth = await currentUser()
@@ -23,7 +23,7 @@ export default async function Page() {
   }
 
   return (
-    <DashboardMain
+    <DashboardLayout
       cta={
         <CreateEventCategoryModal>
           <Button className="w-full sm:w-fit">
@@ -35,6 +35,6 @@ export default async function Page() {
       title="Dashboard"
     >
       <DashboardContent />
-    </DashboardMain>
+    </DashboardLayout>
   )
 }
