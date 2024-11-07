@@ -1,23 +1,16 @@
 "use client"
-import { useQueryClient } from "@tanstack/react-query"
-import { PropsWithChildren, useState } from "react"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Modal } from "@/components/ui/modal"
+import { client } from "@/lib/client"
+import { EVENT_CATEGORY_VALIDATOR } from "@/lib/validators/category-validators"
+import { cn } from "@/utils"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { PropsWithChildren, useState } from "react"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
-import { CATEGORY_NAME_VALIDATOR } from "@/lib/validators/category-validators"
-import { Modal } from "@/components/ui/modal"
-import { Label } from "@/components/ui/label"
-import { Input } from "@/components/ui/input"
-import { cn } from "@/utils"
-
-const EVENT_CATEGORY_VALIDATOR = z.object({
-  name: CATEGORY_NAME_VALIDATOR,
-  color: z
-    .string()
-    .min(1, "Color is required")
-    .regex(/^#[0-9A-F]{6}$/i, "Invalid color format."),
-  emoji: z.string().emoji("Invalid Emoji").optional(),
-})
 
 type EventCategoryForm = z.infer<typeof EVENT_CATEGORY_VALIDATOR>
 
@@ -52,6 +45,15 @@ export default function CreateEventCategoryModal({
 }: PropsWithChildren) {
   const [isOpen, setIsOpen] = useState(false)
   const queryClient = useQueryClient()
+  const { mutate: createEventCategory, isPending } = useMutation({
+    mutationFn: async (data: EventCategoryForm) => {
+      await client.category.createEventCategory.$post(data)
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["user-event-categories"] })
+      setIsOpen(false)
+    },
+  })
 
   const {
     register,
@@ -64,8 +66,11 @@ export default function CreateEventCategoryModal({
   })
 
   const color = watch("color")
+  const selectedEmoji = watch("emoji")
 
-  const onSubmit = (data: EventCategoryForm) => {}
+  const onSubmit = (data: EventCategoryForm) => {
+    createEventCategory(data)
+  }
   return (
     <>
       <div onClick={() => setIsOpen(true)}>{children}</div>
@@ -109,7 +114,7 @@ export default function CreateEventCategoryModal({
                     type="button"
                     className={cn(
                       `bg-[${premadeColor}]`,
-                      "size-10 rounded-full, ring-2 ring-offset-2 transition-all",
+                      "size-10 rounded-full ring-2 ring-offset-2 transition-all",
                       color === premadeColor
                         ? "ring-brand-700 scale-110"
                         : "ring-transparent hover:scale-105"
@@ -118,7 +123,53 @@ export default function CreateEventCategoryModal({
                   ></button>
                 ))}
               </div>
+
+              {errors.color ? (
+                <p className="mt-1 text-sm text-red-500">
+                  {errors.color.message}
+                </p>
+              ) : null}
             </div>
+
+            <div>
+              <Label>Emoji</Label>
+              <div className="flex flex-wrap gap-3">
+                {EMOJI_OPTIONS.map(({ emoji, label }) => (
+                  <button
+                    key={emoji}
+                    type="button"
+                    className={cn(
+                      "size-10 flex items-center justify-center text-xl rounded-md transition-all",
+                      selectedEmoji === emoji
+                        ? "bg-brand-100 ring-2 ring-brand-700 scale-110"
+                        : "bg-brand-100 hover:bg-brand-200"
+                    )}
+                    onClick={() => setValue("emoji", emoji)}
+                  >
+                    {emoji}
+                  </button>
+                ))}
+              </div>
+
+              {errors.emoji ? (
+                <p className="mt-1 text-sm text-red-500">
+                  {errors.emoji.message}
+                </p>
+              ) : null}
+            </div>
+          </div>
+
+          <div className="flex justify-end space-x-3 pt-4 border-t">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setIsOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button type="submit" disabled={isPending}>
+              {isPending ? "Creating..." : "Create Category"}
+            </Button>
           </div>
         </form>
       </Modal>

@@ -1,8 +1,10 @@
 import { db } from "@/db"
-import { router } from "../__internals/router"
-import { privateProcedure } from "../procedures"
+import { EVENT_CATEGORY_VALIDATOR } from "@/lib/validators/category-validators"
 import { startOfMonth } from "date-fns"
 import { z } from "zod"
+import { router } from "../__internals/router"
+import { privateProcedure } from "../procedures"
+import { parseColor } from "@/utils"
 
 export const categoryRouter = router({
   getEventCategories: privateProcedure.query(async ({ c, ctx }) => {
@@ -79,5 +81,25 @@ export const categoryRouter = router({
       })
 
       return c.json({ success: true })
+    }),
+
+  createEventCategory: privateProcedure
+    .input(EVENT_CATEGORY_VALIDATOR)
+    .mutation(async ({ c, ctx, input }) => {
+      const { user } = ctx
+      const { color, name, emoji } = input
+
+      // TODO: ADD PAIN PLAN LOGIC
+
+      const eventCategory = await db.eventCategory.create({
+        data: {
+          name: name.toLocaleLowerCase(),
+          color: parseColor(color),
+          emoji,
+          userId: user.id,
+        },
+      })
+
+      return c.json({ eventCategory })
     }),
 })
