@@ -20,10 +20,12 @@ export default function CategoryPageContent({
   hasEvents: initialHasEvents,
   category,
 }: CategoryPageContentProps) {
+  // Tabs state
   const [activeTab, setActiveTab] = useState<"today" | "week" | "month">(
     "today"
   )
 
+  // URL States
   const [pageIndex, setPageIndex] = useQueryState(
     "page",
     parseAsInteger.withDefault(1)
@@ -33,11 +35,13 @@ export default function CategoryPageContent({
     parseAsInteger.withDefault(20)
   )
 
+  // Events Fetching API until first one presents
   const { data: pollingData } = useQuery({
     queryKey: ["category", category.name, "hasEvents"],
     initialData: { hasEvents: initialHasEvents },
   })
 
+  // Main Events Fetching API
   const { data, isFetching } = useQuery({
     queryKey: ["events", category.name, pageIndex, pageSize, activeTab],
     queryFn: async () => {
@@ -54,6 +58,7 @@ export default function CategoryPageContent({
     enabled: pollingData.hasEvents,
   })
 
+  // Calculation to fetch numeric fields in an Event
   const numericFieldSums = useMemo(() => {
     if (!data?.events || data.events.length === 0) return {}
 
@@ -106,6 +111,7 @@ export default function CategoryPageContent({
     return sums
   }, [data?.events])
 
+  // Component for Numeric Fields in Event
   const NumericFieldsSumCards = () => {
     if (Object.keys(numericFieldSums).length === 0) return null
     return Object.entries(numericFieldSums).map(([field, sums]) => {
