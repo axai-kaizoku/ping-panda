@@ -1,7 +1,6 @@
-STAR THE REPO IF YOURE COOL
+## ##Ping Panda
 
-jStack - an opinionated stack to ship high-performance, low-cost Next.js apps inspired by the T3 stack.
-
-This is an early-stage stack so probably dont use in production yet. If you're wild enough to do so despite this warning, let me know your website URL so I can feature you lol
-
-documentation coming soon, for now just clone this repo, fill out the .env.example :))
+[x] - clerk
+[x] - react-hook-form (this is too hot) 🔥
+[x] - tanstack react-query (this is awesome) 🧲⚡
+[ ] - tanstack tables
