@@ -3,23 +3,14 @@
 import { Card } from "@/components/ui/card"
 import { client } from "@/lib/client"
 import { Plan } from "@prisma/client"
-import { useMutation, useQueries, useQuery } from "@tanstack/react-query"
+import { useQuery } from "@tanstack/react-query"
 import { format } from "date-fns"
 import { BarChart } from "lucide-react"
 import { useRouter } from "next/navigation"
+import PaymentBtn from "./payment-page"
 
 export default function UpgradePageContent({ plan }: { plan: Plan }) {
   const router = useRouter()
-
-  const { mutate: createCheckoutSession } = useMutation({
-    mutationFn: async () => {
-      const res = await client.payment.createCheckoutSession.$post()
-      return await res.json()
-    },
-    onSuccess: ({ url }) => {
-      if (url) router.push(url)
-    },
-  })
 
   const { data: usageData } = useQuery({
     queryKey: ["usage"],
@@ -84,13 +75,12 @@ export default function UpgradePageContent({ plan }: { plan: Plan }) {
           <span className="animate-pulse w-8 h-4 bg-gray-200"></span>
         )}
         {plan !== "PRO" ? (
-          <span
-            onClick={() => createCheckoutSession()}
-            className="inline underline cursor-pointer text-brand-600"
-          >
-            {" "}
-            or upgrade now to increase your limit &rarr;
-          </span>
+          <PaymentBtn>
+            <span className="inline underline cursor-pointer text-brand-600">
+              {" "}
+              or upgrade now to increase your limit &rarr;
+            </span>
+          </PaymentBtn>
         ) : null}
       </p>
     </div>
