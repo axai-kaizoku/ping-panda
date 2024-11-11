@@ -37,15 +37,6 @@ export default async function Navbar({}: NavbarProps) {
             ) : (
               <>
                 <Link
-                  href="/pricing"
-                  className={buttonVariants({
-                    size: "sm",
-                    variant: "ghost",
-                  })}
-                >
-                  Pricing
-                </Link>
-                <Link
                   href="/sign-in"
                   className={buttonVariants({
                     size: "sm",
