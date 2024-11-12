@@ -13,6 +13,8 @@ const eb_garamond = EB_Garamond({
   variable: "--font-heading",
 })
 
+export const runtime = "edge"
+
 export const metadata: Metadata = {
   title: "Ping Panda",
   description: "Monitor your SaaS, easily !!",
